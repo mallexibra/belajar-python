@@ -21,6 +21,7 @@ Dashboard ini dibuat menggunakan **Streamlit** untuk menganalisis dataset penyew
 
 3. **Jalankan Streamlit**:
    ```bash
+   cd dashboard
    streamlit run dashboard.py
    ```
 
