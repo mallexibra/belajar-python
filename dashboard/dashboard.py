@@ -6,7 +6,7 @@ import seaborn as sns
 # Load dataset
 @st.cache_data
 def load_data():
-    file_path = "hour.csv"  # Sesuaikan dengan lokasi file
+    file_path = "dashboard/hour.csv"  # Sesuaikan dengan lokasi file
     df = pd.read_csv(file_path)
     df['dteday'] = pd.to_datetime(df['dteday'])
     return df
