@@ -11,7 +11,7 @@ Dashboard ini dibuat menggunakan **Streamlit** untuk menganalisis dataset penyew
 1. **Clone repository**:
    ```bash
    git clone https://github.com/mallexibra/belajar-python.git
-   cd belajar-python/dashboard
+   cd belajar-python
    ```
 
 2. **Install dependencies**:

@@ -6,7 +6,7 @@ import seaborn as sns
 # Load dataset
 @st.cache_data
 def load_data():
-    file_path = "dashboard/hour.csv"  # Sesuaikan dengan lokasi file
+    file_path = "../data/hour.csv"  # Sesuaikan dengan lokasi file
     df = pd.read_csv(file_path)
     df['dteday'] = pd.to_datetime(df['dteday'])
     return df
@@ -28,39 +28,39 @@ df_filtered = df[(df['hr'].between(selected_hour[0], selected_hour[1])) & (df['w
 if st.checkbox("Tampilkan Data 🚲"):
     st.write(df_filtered.head())
 
-# Visualisasi 1: Tren Peminjaman Sepeda Sepanjang Hari (berdasarkan filter)
-st.subheader("📈 Tren Peminjaman Sepeda Sepanjang Hari (Sesuai Filter)")
+# Visualisasi 1: Tren Peminjaman Sepeda Sepanjang Hari
+st.subheader("📈 Tren Peminjaman Sepeda Sepanjang Hari")
 hourly_rentals = df_filtered.groupby('hr')['cnt'].mean()
-fig, ax = plt.subplots(figsize=(10, 5))
-sns.lineplot(x=hourly_rentals.index, y=hourly_rentals.values, marker="o", ax=ax)
+fig, ax = plt.subplots(figsize=(12, 6))
+sns.lineplot(x=hourly_rentals.index, y=hourly_rentals.values, marker="o", linewidth=2, ax=ax)
 ax.set_title("Rata-rata Jumlah Penyewaan Sepeda per Jam")
 ax.set_xlabel("Jam dalam Sehari")
 ax.set_ylabel("Jumlah Penyewaan")
+ax.set_xticks(range(0, 24))
+ax.grid(True)
 st.pyplot(fig)
 
-# Visualisasi 2: Dampak Cuaca terhadap Peminjaman Sepeda (berdasarkan filter)
+# Visualisasi 2: Pengaruh Cuaca terhadap Peminjaman Sepeda
 st.subheader("🌦️ Pengaruh Cuaca terhadap Peminjaman Sepeda")
-weather_rentals = df_filtered.groupby('weathersit')['cnt'].mean()
-fig, ax = plt.subplots(figsize=(8, 5))
-sns.barplot(x=weather_rentals.index, y=weather_rentals.values, palette="coolwarm", ax=ax)
+fig, ax = plt.subplots(figsize=(10, 6))
+sns.boxplot(x='weathersit', y='cnt', data=df_filtered, palette="coolwarm", ax=ax)
+ax.set_title("Pengaruh Cuaca terhadap Jumlah Peminjaman Sepeda")
 ax.set_xlabel("Cuaca (1=Clear, 2=Cloudy, 3=Rain/Snow, 4=Extreme)")
-ax.set_ylabel("Jumlah Penyewaan")
-ax.set_title("Rata-rata Jumlah Penyewaan Berdasarkan Cuaca")
+ax.set_ylabel("Jumlah Peminjaman")
+ax.grid(axis="y", linestyle="--", alpha=0.7)
 st.pyplot(fig)
 
-# Visualisasi 3: Pola Peminjaman Pengguna Kasual vs Terdaftar (berdasarkan filter)
+# Visualisasi 3: Perbedaan Pola Peminjaman Pengguna Kasual vs Terdaftar
 st.subheader("👥 Pola Peminjaman Pengguna Kasual vs Terdaftar")
-casual_rentals = df_filtered.groupby('weekday')['casual'].mean()
-registered_rentals = df_filtered.groupby('weekday')['registered'].mean()
-
-fig, ax = plt.subplots(figsize=(10, 5))
-sns.lineplot(x=casual_rentals.index, y=casual_rentals.values, label='Casual', marker="o", ax=ax)
-sns.lineplot(x=registered_rentals.index, y=registered_rentals.values, label='Registered', marker="s", ax=ax)
-ax.set_xticks(range(7))
-ax.set_xticklabels(["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"])
-ax.set_xlabel("Hari dalam Seminggu")
-ax.set_ylabel("Jumlah Penyewaan")
-ax.set_title("Perbedaan Pola Peminjaman: Pengguna Kasual vs Terdaftar")
+fig, ax = plt.subplots(figsize=(12, 6))
+sns.lineplot(x=df_filtered['hr'], y=df_filtered['casual'], label='Casual', marker="o", ax=ax)
+sns.lineplot(x=df_filtered['hr'], y=df_filtered['registered'], label='Registered', marker="s", ax=ax)
+ax.set_title("Perbedaan Pola Peminjaman antara Pengguna Kasual dan Terdaftar")
+ax.set_xlabel("Jam dalam Sehari")
+ax.set_ylabel("Jumlah Peminjaman")
+ax.set_xticks(range(0, 24))
+ax.legend()
+ax.grid(True)
 st.pyplot(fig)
 
 st.write("💡 **Dashboard ini membantu memahami pola peminjaman sepeda berdasarkan waktu, cuaca, dan jenis pengguna.** 🚴‍♂️📊")
